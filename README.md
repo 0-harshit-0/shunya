@@ -6,5 +6,4 @@
 - Multiple randomized ASCII art for the terminal.
 - Explore the NASA API.
 - Move the GenAI from utils.py to a specific folder.
-- Move the other utility folders to a single utility folder.
 - Check if the bot can access activities and interact with them. Like, Blackjack.

@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import discord
 from discord.ext import commands
 
-from utils import handle_rate_limit
+from utils.rate_limit import handle_rate_limit
 
 
 class Ping(commands.Cog):

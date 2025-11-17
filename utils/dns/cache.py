@@ -1,7 +1,14 @@
 # dns_cache.py
 import time, json, lmdb
+from pathlib import Path
+from typing import List, Dict, Any
 
-ENV = lmdb.open("./dns/dns_cache", map_size=10*1024*1024, subdir=True, max_dbs=1, lock=True)
+
+# Path to the project root (adjust .parent levels if needed)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # e.g. file is in utils/, project root is two levels up
+DEFAULT_DIR = str(PROJECT_ROOT / "global_cache" / "dns_cache")
+
+ENV = lmdb.open(DEFAULT_DIR, map_size=10*1024*1024, subdir=True, max_dbs=1, lock=True)
 
 def _make_key(name: str, rtype: str, rclass: str = "IN") -> bytes:
     return f"{name.lower()}|{rtype.upper()}|{rclass.upper()}".encode("utf-8")

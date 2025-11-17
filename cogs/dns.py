@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 
-from dns.main import resolver  # Import from your custom dns module
-from utils import handle_rate_limit
+from utils.dns.main import resolver  # Import from your custom dns module
+from utils.rate_limit import handle_rate_limit
 
 class Dns(commands.Cog):
     def __init__(self, bot):

@@ -1,9 +1,6 @@
 import discord
 from discord.ext import commands
-
 import pyfiglet
-
-from utils import handle_rate_limit
 
 
 class Ascii(commands.Cog):
@@ -15,9 +12,6 @@ class Ascii(commands.Cog):
         """
         Convert text to ASCII art, e.g. !asc gn -> big ASCII 'gn'.
         """
-        if not await handle_rate_limit(ctx):
-            return
-
         # Guard so you don't blow past Discord's 2000‑char limit
         if len(text) > 20:
             await ctx.send("Please use 20 characters or fewer for ASCII art.")

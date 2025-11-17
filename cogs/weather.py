@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
-from utils import handle_rate_limit, generate_response
+
+from utils.rate_limit import handle_rate_limit
+from utils.ai import generate_response
+
 
 class Weather(commands.Cog):
     def __init__(self, bot):

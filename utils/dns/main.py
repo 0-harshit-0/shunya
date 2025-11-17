@@ -4,7 +4,7 @@ import socket
 import random
 import time
 
-from dns.cache import get_records, set_records, print_view, purge_expired
+from utils.dns.cache import get_records, set_records, print_view, purge_expired
 
 root_ips = []
 nearest_root = []
@@ -14,7 +14,7 @@ sock.settimeout(2.0)
 
 
 def update_root_address():
-	with open("dns/root.hints","r+") as f:
+	with open("utils/dns/root.hints","r+") as f:
 		nm = f.read().splitlines()
 		for line in nm:
 			if "A " in line and "AAAA" not in line:

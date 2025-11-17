@@ -2,9 +2,9 @@
 import datetime
 import discord
 from discord.ext import commands, tasks
-from utils import handle_rate_limit
 
-from tarot.tarot_cache import TarotStore
+from utils.rate_limit import handle_rate_limit
+from utils.tarot.tarot_cache import TarotStore
 
 # Use your preferred timezone; Asia/Kolkata shown here
 IST = datetime.timezone(datetime.timedelta(hours=5, minutes=30), name="IST")

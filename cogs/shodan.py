@@ -5,7 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import shodan
 
-from utils import handle_rate_limit
+from utils.rate_limit import handle_rate_limit
 
 # --- Configuration ---
 load_dotenv()

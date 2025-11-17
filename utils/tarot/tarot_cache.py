@@ -4,10 +4,14 @@ import json
 import lmdb
 import requests
 import datetime
+from pathlib import Path
 from typing import List, Dict, Any
 
+
+# Path to the project root (adjust .parent levels if needed)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # e.g. file is in utils/, project root is two levels up
+DEFAULT_DIR = str(PROJECT_ROOT / "global_cache" / "tarot_cache")
 TAROT_API = "https://tarotapi.dev/api/v1/cards/random?n=3"
-DEFAULT_DIR = os.path.join(".", "tarot", "data", "tarot_cache")
 DEFAULT_MAP_SIZE = 10 * 1024 * 1024  # 10 MB
 
 class TarotStore:

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
-from utils import handle_rate_limit  # assuming you have this from the Shodan cog
+from utils.rate_limit import handle_rate_limit
 
 load_dotenv()
 
