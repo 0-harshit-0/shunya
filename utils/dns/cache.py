@@ -13,6 +13,7 @@ ENV = lmdb.open(DEFAULT_DIR, map_size=10*1024*1024, subdir=True, max_dbs=1, lock
 def _make_key(name: str, rtype: str, rclass: str = "IN") -> bytes:
     return f"{name.lower()}|{rtype.upper()}|{rclass.upper()}".encode("utf-8")
 
+
 def get_records(name: str, rtype: str, rclass: str = "IN"):
     now = time.time()
     key = _make_key(name, rtype, rclass)
@@ -44,6 +45,7 @@ def get_records(name: str, rtype: str, rclass: str = "IN"):
 
         return unique_live
 
+
 def set_records(name: str, values_with_ttl: list, rtype: str, rclass: str = "IN"):
     # values_with_ttl: iterable of (value, ttl_seconds)
     now = time.time()
@@ -58,10 +60,12 @@ def set_records(name: str, values_with_ttl: list, rtype: str, rclass: str = "IN"
     with ENV.begin(write=True) as txn:
         txn.put(key, json.dumps(value_obj, separators=(",", ":")).encode("utf-8"))
 
+
 def delete_key(name: str, rtype: str, rclass: str = "IN"):
     key = _make_key(name, rtype, rclass)
     with ENV.begin(write=True) as txn:
         txn.delete(key)
+
 
 def clear_all():
     with ENV.begin(write=True) as txn:
@@ -69,6 +73,7 @@ def clear_all():
         # delete all K/V pairs
         for k, _v in list(cur):  # list() to snapshot keys before deleting
             txn.delete(k)
+
 
 def purge_expired(now: float | None = None):
     now = time.time() if now is None else now
@@ -107,6 +112,7 @@ def view_all():
                 obj = {"_error": "unable to decode value"}
             out.append({"key": k.decode("utf-8", errors="replace"), "value": obj})
     return out
+
 
 def print_view(all_entries=True):
     """
