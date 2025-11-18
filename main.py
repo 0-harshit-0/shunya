@@ -15,6 +15,7 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 # --- Bot Setup ---
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True  # important for members list
 bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
 
 
@@ -94,7 +95,7 @@ async def help_command(ctx):
             "• Now: temp, feels-like, condition; humidity, wind/gusts, precip chance\n"
             "• AQI: value & category; primary pollutant; brief health advice\n"
             "• Today: high/low; sunrise/sunset\n"
-            "• Next 6-12h: brief outlook"
+            "• Next 6–12h: brief outlook"
         ),
         inline=False
     )
@@ -156,6 +157,15 @@ async def help_command(ctx):
         value=(
             "Automatically posts the latest Astronomy Picture of the Day once every 24 hours "
             "to a configured channel."
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="Random ping (fun cog)",
+        value=(
+            "Every 12 hours, randomly tags a non-bot member in a configured server/channel "
+            "with a light, non-sensitive, Discord-style message."
         ),
         inline=False
     )
