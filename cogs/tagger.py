@@ -31,7 +31,7 @@ class RandomTagger(commands.Cog):
         with a light‑hearted, non‑sensitive message.
         """
         GUILD_ID = int(os.getenv("SERVER_ID"))
-        CHANNEL_ID = int(os.getenv("ENTERTAINMENT_CHANNEL"))
+        CHANNEL_ID = int(os.getenv("GENERAL_2"))
 
         guild = self.bot.get_guild(GUILD_ID)
         if guild is None:
