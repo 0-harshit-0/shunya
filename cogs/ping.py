@@ -13,15 +13,31 @@ class Ping(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
+    async def _detect_proxy(self, host: str, reader: asyncio.StreamReader) -> str | None:
+        """
+        Best-effort detection of a common HTTP reverse proxy/CDN.
+        Currently detects Cloudflare via response headers.
+        """
+        try:
+            # Read up to first 4 KiB of the HTTP response
+            data = await asyncio.wait_for(reader.read(4096), timeout=3.0)
+        except Exception:
+            return None
+
+        headers = data.decode(errors="ignore").lower()
+
+        # Very simple Cloudflare detection heuristics
+        if "server: cloudflare" in headers or "cf-ray:" in headers or "cf-cache-status:" in headers:
+            return "Cloudflare"
+
+        # You could add more CDNs here based on their `Server` or custom headers.
+        return None
+
     @commands.command(name="ping")
     async def ping_site(self, ctx: commands.Context, *, target: str):
         """
-        Checks if a host is reachable and shows its IP/latency.
-
-        Usage:
-          !ping example.com
-          !ping https://example.com
-          !ping example.com:8080
+        Checks if a host is reachable and shows its IP/latency,
+        and (best-effort) whether a proxy like Cloudflare is in front.
         """
         if not await handle_rate_limit(ctx):
             return
@@ -54,7 +70,6 @@ class Ping(commands.Cog):
         print(f"-> Received !ping request for: {raw_input} -> host={host}, port={port}")
 
         try:
-            # Resolve hostname to IP (first IPv4/IPv6 result)
             loop = asyncio.get_running_loop()
             addrinfo = await loop.getaddrinfo(
                 host,
@@ -87,18 +102,40 @@ class Ping(commands.Cog):
 
             latency_ms = (loop.time() - start) * 1000
 
+            # Send a tiny HTTP request so we can inspect headers
+            http_request = (
+                f"HEAD / HTTP/1.1\r\n"
+                f"Host: {host}\r\n"
+                f"Connection: close\r\n"
+                f"\r\n"
+            ).encode("ascii", errors="ignore")
+
+            try:
+                writer.write(http_request)
+                await writer.drain()
+            except Exception:
+                # If this fails, we still have the TCP latency
+                pass
+
+            proxy_name = await self._detect_proxy(host, reader)
+
             # Cleanly close connection
             writer.close()
             with contextlib.suppress(Exception):
                 await writer.wait_closed()
 
             msg_lines = [
-                f"✅ Host **UP**",
+                "✅ Host **UP**",
                 f"- Hostname: `{host}`",
                 f"- IP: `{ip_address}`",
                 f"- Port: `{port}`",
                 f"- Latency: `{latency_ms:.1f} ms` (TCP connect)",
             ]
+
+            if proxy_name:
+                msg_lines.append(
+                    f"- Edge/Proxy: `{proxy_name}` (you are hitting the CDN/proxy, not the origin directly)"
+                )
 
             await ctx.send("\n".join(msg_lines))
 

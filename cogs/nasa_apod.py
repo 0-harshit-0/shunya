@@ -91,7 +91,8 @@ class Apod(commands.Cog):
 
   async def fetch_apod(self):
     api_key = os.getenv("NASA_API_KEY", "DEMO_KEY")
-    params = {"api_key": api_key}
+    today = datetime.now(timezone.utc).date().isoformat()
+    params = {"api_key": api_key, "date": today}
 
     async with aiohttp.ClientSession() as session:
       try:

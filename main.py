@@ -23,7 +23,7 @@ async def load_cogs():
     """Load all cogs from the cogs directory."""
     print("Loading cogs...")
     for filename in os.listdir('./cogs'):
-        if filename.endswith('.py') and filename != '__init__.py':
+        if filename.endswith('.py') and filename != '__init__.py': # and filename != 'tagger.py'
             try:
                 await bot.load_extension(f'cogs.{filename[:-3]}')
                 print(f'✅ Successfully loaded: cogs.{filename[:-3]}')
