@@ -24,7 +24,7 @@ class RandomTagger(commands.Cog):
         if self.random_ping.is_running():
             self.random_ping.cancel()
 
-    @tasks.loop(hours=12)
+    @tasks.loop(hours=1)
     async def random_ping(self):
         """
         Every 12 hours, tag a random user in a specific channel
@@ -59,7 +59,20 @@ class RandomTagger(commands.Cog):
             "{mention}, this is your scheduled reminder that you’re pretty cool.",
             "Psst {mention}, if this was a cringe ping, blame RNG, not me.",
             "{mention}, fun fact: you’re today’s lucky ping winner. No prize, just vibes.",
+            "Hey {mention}, I'm on a seafood diet. I see food, and I eat it.",
+            "Psst {mention}, you smell like pasta. Stand back!",
+            "{mention}, if history repeats itself, I’m getting a dinosaur pet.",
+            "Hey {mention}, I’m out of my mind. Be back in 5 minutes.",
+            "Hey {mention}, do you ever accidentally eat a whole pint of ice cream?",
+            "{mention}, what’s the weirdest thing you’ve ever eaten?",
+            "{mention}, if you could have any superpower, what would it be and why?",
+            "Hey {mention}, what's your go-to karaoke song?",
+            "{mention}, what's the most useless talent you have?",
+            "{mention}, this is your refrigerator. Please speak very slowly, and I’ll stick your message to myself with one of these magnets.",
+            "Hey {mention}, most likely to have 100 tabs open at once.",
+            "{mention}, most likely to be sharing the wrong screen in a meeting.",
         ]
+
 
         template = random.choice(funny_templates)
         message = template.format(mention=member.mention)
