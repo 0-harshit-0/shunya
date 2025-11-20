@@ -22,14 +22,29 @@ bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
 async def load_cogs():
     """Load all cogs from the cogs directory."""
     print("Loading cogs...")
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py') and filename != '__init__.py': # and filename != 'tagger.py'
-            try:
-                await bot.load_extension(f'cogs.{filename[:-3]}')
-                print(f'✅ Successfully loaded: cogs.{filename[:-3]}')
-            except Exception as e:
-                print(f'❌ Failed to load: cogs.{filename[:-3]}')
-                print(f'   Error: {e}')
+    # Walk through the directory tree starting at ./cogs
+    for root, dirs, files in os.walk('./cogs'):
+        # Optional: Skip __pycache__ directories to be efficient
+        if '__pycache__' in dirs:
+            dirs.remove('__pycache__')
+
+        for filename in files:
+            if filename.endswith('.py') and filename != '__init__.py':
+                # Construct the file path (e.g., ./cogs/subdir/filename.py)
+                file_path = os.path.join(root, filename)
+                
+                # Create the module path relative to the current working directory
+                # 1. Get relative path (removes './') -> cogs/subdir/filename.py
+                # 2. Remove the last 3 characters (.py) -> cogs/subdir/filename
+                # 3. Replace OS path separators (/ or \) with dots -> cogs.subdir.filename
+                module_name = os.path.relpath(file_path, '.').replace(os.path.sep, '.')[:-3]
+
+                try:
+                    await bot.load_extension(module_name)
+                    print(f'✅ Successfully loaded: {module_name}')
+                except Exception as e:
+                    print(f'❌ Failed to load: {module_name}')
+                    print(f'   Error: {e}')
     
     print(f"\nRegistered commands: {[cmd.name for cmd in bot.commands]}\n")
 
