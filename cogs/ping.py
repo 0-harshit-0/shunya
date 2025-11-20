@@ -67,7 +67,7 @@ class Ping(commands.Cog):
             return
 
         await ctx.send(f"🔍 Resolving and pinging `{host}` (port {port})...")
-        print(f"-> Received !ping request for: {raw_input} -> host={host}, port={port}")
+        print(f"-> Received /ping request for: {raw_input} -> host={host}, port={port}")
 
         try:
             loop = asyncio.get_running_loop()
