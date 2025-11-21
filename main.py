@@ -29,7 +29,7 @@ async def load_cogs():
             dirs.remove('__pycache__')
 
         for filename in files:
-            if filename.endswith('.py') and filename != '__init__.py':
+            if filename.endswith('.py') and filename != '__init__.py' and filename != 'tagger.py':
                 # Construct the file path (e.g., ./cogs/subdir/filename.py)
                 file_path = os.path.join(root, filename)
                 
@@ -56,8 +56,7 @@ async def on_ready():
     print(f'Shunya logged in as {bot.user}')
     print(
         'Public bot live at: https://github.com/0-harshit-0/shunya\n'
-        'Ready with /trap, /shodan, /asc, /tarot, /weather, /techstack, '
-        '/trend, /ping, /dns, and /help commands. Rate limiting is active.'
+        'Ready with /trap, /shodan, /asc, /tarot, /weather, /ping, /dns, and /help commands. Rate limiting is active.'
     )
 
 
@@ -111,24 +110,6 @@ async def help_command(ctx):
             "• AQI: value & category; primary pollutant; brief health advice\n"
             "• Today: high/low; sunrise/sunset\n"
             "• Next 6–12h: brief outlook"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="/techstack `<company_domain>`",
-        value=(
-            "Guesses the public tech stack behind a company's website.\n"
-            "• Input a domain (e.g. `example.com`) to see servers, frameworks, and major tools"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="/trend `<topic>`",
-        value=(
-            "Shows what’s currently trending for a topic.\n"
-            "• Great for getting a quick overview of news, tools, or discussions"
         ),
         inline=False
     )
