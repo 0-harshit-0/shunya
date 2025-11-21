@@ -29,7 +29,7 @@ async def load_cogs():
             dirs.remove('__pycache__')
 
         for filename in files:
-            if filename.endswith('.py') and filename != '__init__.py' and filename != 'tagger.py':
+            if filename.endswith('.py') and filename != '__init__.py': # and filename != 'tagger.py':
                 # Construct the file path (e.g., ./cogs/subdir/filename.py)
                 file_path = os.path.join(root, filename)
                 
