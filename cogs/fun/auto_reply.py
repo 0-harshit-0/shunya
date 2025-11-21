@@ -55,7 +55,10 @@ class AutoReplyCog(commands.Cog):
                     context_parts.append(f"Recent messages from {user.name}:\n{related_text}")
 
             # Combine all context parts and current message content for prompt
-            full_context = "\n".join(context_parts) + "\n" + message.content
+            if len(context_parts) > 0:
+                full_context = message.content + "\nHere's some context:"+("\n".join(context_parts) )
+            else:
+                full_context = message.content
 
             prompt = os.getenv("REPLY_PROMPT") + full_context
 

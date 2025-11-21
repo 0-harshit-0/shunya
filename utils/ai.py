@@ -7,7 +7,7 @@ from google.genai import types
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-GEMINI_MODEL = "gemini-2.5-flash-lite"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 # Single shared client; uses GEMINI_API_KEY/GOOGLE_API_KEY env automatically
 client = genai.Client(api_key=GEMINI_API_KEY)

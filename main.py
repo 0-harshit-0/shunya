@@ -60,7 +60,7 @@ async def on_ready():
     )
 
 
-@bot.command(name='help')
+@bot.hybrid_command(name="help", description="Shows help message")
 async def help_command(ctx):
     """Lists all available commands with a brief description."""
     embed = discord.Embed(
