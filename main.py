@@ -3,63 +3,66 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import asyncio
-
 from utils.terminal_ascii import outsourced1
 
 # --- Configuration ---
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
+# --- Bot Subclass ---
+# We subclass commands.Bot to use setup_hook correctly
+class ShunyaBot(commands.Bot):
+    def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.members = True
+        super().__init__(command_prefix='/', intents=intents, help_command=None)
 
+    async def setup_hook(self):
+        """
+        This is called ONCE when the bot starts, BEFORE on_ready.
+        Load extensions (Cogs) here to ensure they are registered before sync.
+        """
+        print("Loading cogs...")
+        for root, dirs, files in os.walk('./cogs'):
+            if '__pycache__' in dirs:
+                dirs.remove('__pycache__')
+            for filename in files:
+                if filename.endswith('.py') and filename != '__init__.py' and filename != 'tagger.py':
+                    file_path = os.path.join(root, filename)
+                    module_name = os.path.relpath(file_path, '.').replace(os.path.sep, '.')[:-3]
+                    try:
+                        await self.load_extension(module_name)
+                        print(f'✅ Successfully loaded: {module_name}')
+                    except Exception as e:
+                        print(f'❌ Failed to load: {module_name}')
+                        print(f'   Error: {e}')
+        
+        # Optional: Sync strictly to a test guild for instant updates during dev
+        # TEST_GUILD = discord.Object(id=YOUR_SERVER_ID_HERE)
+        # self.tree.copy_global_to(guild=TEST_GUILD)
+        # await self.tree.sync(guild=TEST_GUILD)
 
-# --- Bot Setup ---
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True  # important for members list
-bot = commands.Bot(command_prefix='/', intents=intents, help_command=None)
-
-
-async def load_cogs():
-    """Load all cogs from the cogs directory."""
-    print("Loading cogs...")
-    # Walk through the directory tree starting at ./cogs
-    for root, dirs, files in os.walk('./cogs'):
-        # Optional: Skip __pycache__ directories to be efficient
-        if '__pycache__' in dirs:
-            dirs.remove('__pycache__')
-
-        for filename in files:
-            if filename.endswith('.py') and filename != '__init__.py': # and filename != 'tagger.py':
-                # Construct the file path (e.g., ./cogs/subdir/filename.py)
-                file_path = os.path.join(root, filename)
-                
-                # Create the module path relative to the current working directory
-                # 1. Get relative path (removes './') -> cogs/subdir/filename.py
-                # 2. Remove the last 3 characters (.py) -> cogs/subdir/filename
-                # 3. Replace OS path separators (/ or \) with dots -> cogs.subdir.filename
-                module_name = os.path.relpath(file_path, '.').replace(os.path.sep, '.')[:-3]
-
-                try:
-                    await bot.load_extension(module_name)
-                    print(f'✅ Successfully loaded: {module_name}')
-                except Exception as e:
-                    print(f'❌ Failed to load: {module_name}')
-                    print(f'   Error: {e}')
-    
-    print(f"\nRegistered commands: {[cmd.name for cmd in bot.commands]}\n")
-
+# --- Instantiate Bot ---
+bot = ShunyaBot()
 
 @bot.event
 async def on_ready():
     """Event triggered when Shunya is ready."""
+    # Syncing globally in on_ready is okay, but better to do it on demand or 
+    # if you are sure everything is loaded. Since we loaded in setup_hook, we are safe.
+    try:
+        synced = await bot.tree.sync()
+        print(f"✅ Synced {len(synced)} command(s) globally.")
+    except Exception as e:
+        print(f"❌ Failed to sync commands: {e}")
+
     print(outsourced1)
     print(f'Shunya logged in as {bot.user}')
-    print(
-        'Public bot live at: https://github.com/0-harshit-0/shunya\n'
-        'Ready with /trap, /shodan, /asc, /tarot, /weather, /ping, /dns, and /help commands. Rate limiting is active.'
-    )
+    print('Ready with /trap, /shodan, /asc, /tarot, /weather, /ping, /dns, and /help commands.')
 
 
+# --- Help Command ---
 @bot.hybrid_command(name="help", description="Shows help message")
 async def help_command(ctx):
     """Lists all available commands with a brief description."""
@@ -179,16 +182,16 @@ async def help_command(ctx):
     await ctx.send(embed=embed)
 
 
+
+# --- Main Entry ---
 async def main():
-    """Main function to load cogs and start the bot."""
     async with bot:
-        await load_cogs()
         await bot.start(DISCORD_TOKEN)
 
-
-# --- Run the Bot ---
 if __name__ == "__main__":
     if not DISCORD_TOKEN:
-        print("ERROR: DISCORD_TOKEN or GEMINI_API_KEY is not set. Please check your .env file.")
+        print("ERROR: DISCORD_TOKEN is not set.")
     else:
         asyncio.run(main())
+
+

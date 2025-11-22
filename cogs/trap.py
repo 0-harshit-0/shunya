@@ -113,7 +113,7 @@ class TrapCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name="trap")
+    @commands.hybrid_command(name="trap")
     async def trap_command(self, ctx: commands.Context, address: str, limit: int = 9):
         """
         Check if an Ethereum address *might* be a trap/honeypot-like wallet

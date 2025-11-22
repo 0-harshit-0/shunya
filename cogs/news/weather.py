@@ -9,7 +9,7 @@ class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='weather')
+    @commands.hybrid_command(name='weather')
     async def get_weather(self, ctx, *, location: str):
         """Provides the latest local weather and AQI for a location in ~100 words."""
         if not await handle_rate_limit(ctx):

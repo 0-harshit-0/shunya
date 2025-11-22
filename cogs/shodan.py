@@ -17,7 +17,7 @@ class ShodanCog(commands.Cog):
         self.bot = bot
         self.shodan = shodan.Shodan(SHODAN_API_KEY) if SHODAN_API_KEY else None
 
-    @commands.command(name="shodan")
+    @commands.hybrid_command(name="shodan")
     async def shodan_search(self, ctx: commands.Context, *, query: str):
         limit = 5
         """

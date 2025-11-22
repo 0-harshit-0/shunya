@@ -16,11 +16,13 @@ class AutoReplyCog(commands.Cog):
         if message.author == self.bot.user:
             return
 
-        if len(message.content) > 100:
-            await message.channel.send(
-                "Sorry, I can only respond to messages that are 100 characters or less! 😊"
-            )
-            return
+        if "gay" in message.content.lower():
+            try:
+                # Direct Message the user
+                await message.author.send("You are a gay bitch") 
+            except discord.Forbidden:
+                # This happens if the user has DMs closed
+                print(f"Could not DM {message.author.name} (DMs likely closed)")
 
         # Check triggers: bot mention or reply to bot
         if (
@@ -30,6 +32,11 @@ class AutoReplyCog(commands.Cog):
                 and getattr(message.reference.resolved, "author", None) == self.bot.user
             )
         ):
+            if len(message.content) > 100:
+                await message.channel.send(
+                    "Sorry, I can only respond to messages that are 100 characters or less! 😊"
+                )
+                return
             # Start building context
             context_parts = []
 

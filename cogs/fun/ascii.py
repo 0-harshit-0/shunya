@@ -7,7 +7,7 @@ class Ascii(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="asc")
+    @commands.hybrid_command(name="asc")
     async def ascii_text(self, ctx, *, text: str):
         """
         Convert text to ASCII art, e.g. !asc gn -> big ASCII 'gn'.

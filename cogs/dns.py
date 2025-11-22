@@ -8,7 +8,7 @@ class Dns(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='dns')
+    @commands.hybrid_command(name='dns', description="custom dns resolver")
     async def resolve_dns(self, ctx, *, url: str):
         """Checks if a website is up or down."""
         if not await handle_rate_limit(ctx):

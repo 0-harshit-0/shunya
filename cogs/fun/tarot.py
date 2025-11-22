@@ -30,7 +30,7 @@ class Tarot(commands.Cog):
     async def before_daily_clear(self):
         await self.bot.wait_until_ready()
 
-    @commands.command(name='tarot')
+    @commands.hybrid_command(name='tarot')
     async def tarot(self, ctx):
         """Draws 3 tarot cards per user per day; repeat calls return your previous draw for today."""
         if not await handle_rate_limit(ctx):

@@ -34,7 +34,7 @@ class Ping(commands.Cog):
         # You could add more CDNs here based on their `Server` or custom headers.
         return None
 
-    @commands.command(name="ping")
+    @commands.hybrid_command(name="ping")
     async def ping_site(self, ctx: commands.Context, *, target: str):
         """
         Checks if a host is reachable and shows its IP/latency,
