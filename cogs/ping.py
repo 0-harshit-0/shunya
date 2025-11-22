@@ -1,5 +1,6 @@
 import asyncio
 import socket
+import ipaddress
 import contextlib
 from urllib.parse import urlparse
 
@@ -91,6 +92,21 @@ class Ping(commands.Cog):
         except Exception as e:
             print(e)
             await ctx.send(f"❌ Unexpected error while resolving `{host}`")
+            return
+
+        try:
+            ip_obj = ipaddress.ip_address(ip_address)
+            if (
+                ip_obj.is_loopback
+                or ip_obj.is_private
+                or ip_obj.is_link_local
+                or ip_obj.is_reserved
+                or ip_obj.is_multicast
+            ):
+                await ctx.send("❌ Target IP address not allowed.") # (private, loopback, or reserved addresses)
+                return
+        except ValueError:
+            await ctx.send("❌ Failed to parse the resolved IP address.")
             return
 
         # Try to open a TCP connection as a "ping"
