@@ -28,7 +28,7 @@ class ShunyaBot(commands.Bot):
             if '__pycache__' in dirs:
                 dirs.remove('__pycache__')
             for filename in files:
-                if filename.endswith('.py') and filename != '__init__.py' and filename != 'tagger.py':
+                if filename.endswith('.py') and filename != '__init__.py':
                     file_path = os.path.join(root, filename)
                     module_name = os.path.relpath(file_path, '.').replace(os.path.sep, '.')[:-3]
                     try:
